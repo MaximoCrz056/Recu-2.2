@@ -24,7 +24,7 @@ let calcularRaices = (a, b, c) => {
     let raiz = -b / (2 * a);
     raices = [raiz];
   } else {
-    return { error: "negativa" }; 
+    return { error: "negativa" };
   }
 
   return { raices };
