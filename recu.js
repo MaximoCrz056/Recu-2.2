@@ -24,7 +24,7 @@ let calcularRaices = (a, b, c) => {
     let raiz = -b / (2 * a);
     raices = [raiz];
   } else {
-    return { error: "negativa" };
+    return { error: "negativa" }; 
   }
 
   return { raices };
@@ -33,7 +33,7 @@ let calcularRaices = (a, b, c) => {
 let generarContenido = (a, b, c, resultadoCalculo) => {
   if (resultadoCalculo.error === "negativa") {
     return `<p class='text-danger mt-3'>La ecuación no tiene solución porque la raíz es negativa.</p>
-                <button id='regresarBtn' class='btn btn-danger btn-sm mt-3'>Regresar</button>`;
+                        <button id='regresarBtn' class='btn btn-danger btn-sm mt-3'>Regresar</button>`;
   } else {
     let raices = resultadoCalculo.raices;
     let tablaHTML = "<table class='table table-bordered mt-3'>";
@@ -62,9 +62,14 @@ evaluarBtn.addEventListener("click", () => {
   let b = parseFloat(document.querySelector("#b").value);
   let c = parseFloat(document.querySelector("#c").value);
 
+  if (isNaN(a) || isNaN(b) || isNaN(c)) {
+    resultado.innerHTML = `<p class='text-danger mt-3'>Por favor, ingresa valores numéricos válidos.</p>`;
+    return;
+  }
+
   let resultadoCalculo = calcularRaices(a, b, c);
 
-  if (resultadoCalculo.raices !== undefined) {
+  if (resultadoCalculo && resultadoCalculo.raices !== undefined) {
     let contenidoHTML = generarContenido(a, b, c, resultadoCalculo);
     resultado.innerHTML = contenidoHTML;
 
@@ -73,7 +78,7 @@ evaluarBtn.addEventListener("click", () => {
       limpiarFormulario();
     });
   } else {
-    resultado.innerHTML = generarContenido(a, b, c, resultadoCalculo);
+    resultado.innerHTML = `<p class='text-danger mt-3'>Por favor, ingresa valores que permitan calcular las raíces.</p>`;
 
     let regresarBtn = document.querySelector("#regresarBtn");
     regresarBtn.addEventListener("click", () => {
