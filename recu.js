@@ -1,6 +1,6 @@
 let inputForm = document.querySelector("#inputForm");
 let evaluarBtn = document.querySelector("#evaluarBtn");
-let resultadoDiv = document.querySelector("#resultado");
+let resultado = document.querySelector("#resultado");
 let errorMensaje = document.querySelector("#errorMensaje");
 let regresarBtn = document.querySelector("#regresarBtn");
 
@@ -8,7 +8,7 @@ let limpiarFormulario = () => {
     document.querySelector("#a").value = "";
     document.querySelector("#b").value = "";
     document.querySelector("#c").value = "";
-    resultadoDiv.innerHTML = "";
+    resultado.innerHTML = "";
     errorMensaje.classList.add("d-none");
 };
 
@@ -69,10 +69,10 @@ evaluarBtn.addEventListener("click", () => {
 
         if (raices !== null) {
             let tablaHTML = generarTabla(a, b, c, raices);
-            resultadoDiv.innerHTML = tablaHTML;
+            resultado.innerHTML = tablaHTML;
             errorMensaje.classList.add("d-none");
 
-            let regresarTablaBtn = resultadoDiv.querySelector("button");
+            let regresarTablaBtn = resultado.querySelector("button");
             regresarTablaBtn.addEventListener("click", () => {
                 limpiarFormulario();
             });
