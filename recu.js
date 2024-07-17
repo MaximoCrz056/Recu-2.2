@@ -1,87 +1,87 @@
-let inputForm = document.querySelector("#inputForm");
 let evaluarBtn = document.querySelector("#evaluarBtn");
 let resultado = document.querySelector("#resultado");
-let errorMensaje = document.querySelector("#errorMensaje");
-let regresarBtn = document.querySelector("#regresarBtn");
 
 let limpiarFormulario = () => {
-    document.querySelector("#a").value = "";
-    document.querySelector("#b").value = "";
-    document.querySelector("#c").value = "";
-    resultado.innerHTML = "";
-    errorMensaje.classList.add("d-none");
+  document.querySelector("#a").value = "";
+  document.querySelector("#b").value = "";
+  document.querySelector("#c").value = "";
+  resultado.innerHTML = "";
 };
 
 let calcularRaices = (a, b, c) => {
-    let discriminante = b * b - 4 * a * c;
-    let raices = [];
+  let discriminante = b * b - 4 * a * c;
+  let raices = [];
 
-    if (discriminante > 0) {
-        let raiz1 = (-b + Math.sqrt(discriminante)) / (2 * a);
-        let raiz2 = (-b - Math.sqrt(discriminante)) / (2 * a);
-        raices = [raiz1, raiz2];
-    } else if (discriminante === 0) {
-        let raiz = -b / (2 * a);
-        raices = [raiz];
-    } else {
-        // Raíces complejas, mostrar mensaje de error
-        errorMensaje.classList.remove("d-none");
-        return null;
-    }
+  if (a === 0) {
+    return null;
+  }
 
-    return raices;
+  if (discriminante > 0) {
+    let raiz1 = (-b + Math.sqrt(discriminante)) / (2 * a);
+    let raiz2 = (-b - Math.sqrt(discriminante)) / (2 * a);
+    raices = [raiz1, raiz2];
+  } else if (discriminante === 0) {
+    let raiz = -b / (2 * a);
+    raices = [raiz];
+  } else {
+    return { error: "negativa" };
+  }
+
+  return { raices };
 };
 
-let generarTabla = (a, b, c, raices) => {
-    let tablaHTML = `
-        <table class="table table-bordered mt-3">
-            <thead>
-                <tr>
-                    <th>a</th>
-                    <th>b</th>
-                    <th>c</th>
-                    <th>x1</th>
-                    <th>x2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>${a}</td>
-                    <td>${b}</td>
-                    <td>${c}</td>
-                    <td>${raices[0] !== undefined ? raices[0] : '-'}</td>
-                    <td>${raices[1] !== undefined ? raices[1] : '-'}</td>
-                </tr>
-            </tbody>
-        </table>
-        <button class="btn btn-danger btn-sm">Regresar</button>
-    `;
+let generarContenido = (a, b, c, resultadoCalculo) => {
+  if (resultadoCalculo.error === "negativa") {
+    return `<p class='text-danger mt-3'>La ecuación no tiene solución porque la raíz es negativa.</p>
+                <button id='regresarBtn' class='btn btn-danger btn-sm mt-3'>Regresar</button>`;
+  } else {
+    let raices = resultadoCalculo.raices;
+    let tablaHTML = "<table class='table table-bordered mt-3'>";
+    tablaHTML +=
+      "<thead><tr><th>a</th><th>b</th><th>c</th><th>x1</th><th>x2</th></tr></thead>";
+    tablaHTML +=
+      "<tbody><tr><td>" + a + "</td><td>" + b + "</td><td>" + c + "</td>";
+
+    for (let i = 0; i < 2; i++) {
+      if (raices[i] !== undefined) {
+        tablaHTML += "<td>" + raices[i].toFixed(2) + "</td>";
+      } else {
+        tablaHTML += "<td>-</td>";
+      }
+    }
+
+    tablaHTML += "</tr></tbody></table>";
+    tablaHTML +=
+      "<button id='regresarBtn' class='btn btn-danger btn-sm mt-3'>Regresar</button>";
     return tablaHTML;
+  }
 };
 
 evaluarBtn.addEventListener("click", () => {
-    let a = parseFloat(document.querySelector("#a").value);
-    let b = parseFloat(document.querySelector("#b").value);
-    let c = parseFloat(document.querySelector("#c").value);
+  let a = parseFloat(document.querySelector("#a").value);
+  let b = parseFloat(document.querySelector("#b").value);
+  let c = parseFloat(document.querySelector("#c").value);
 
-    if (!isNaN(a) && a !== 0 && !isNaN(b) && !isNaN(c)) {
-        let raices = calcularRaices(a, b, c);
+  let resultadoCalculo = calcularRaices(a, b, c);
 
-        if (raices !== null) {
-            let tablaHTML = generarTabla(a, b, c, raices);
-            resultado.innerHTML = tablaHTML;
-            errorMensaje.classList.add("d-none");
+  if (resultadoCalculo.raices !== undefined) {
+    let contenidoHTML = generarContenido(a, b, c, resultadoCalculo);
+    resultado.innerHTML = contenidoHTML;
 
-            let regresarTablaBtn = resultado.querySelector("button");
-            regresarTablaBtn.addEventListener("click", () => {
-                limpiarFormulario();
-            });
-        }
-    } else {
-        alert('Por favor, ingrese valores numéricos válidos para a, b y c. Asegúrese que a sea distinto de 0.');
-    }
+    let regresarBtn = document.querySelector("#regresarBtn");
+    regresarBtn.addEventListener("click", () => {
+      limpiarFormulario();
+    });
+  } else {
+    resultado.innerHTML = generarContenido(a, b, c, resultadoCalculo);
+
+    let regresarBtn = document.querySelector("#regresarBtn");
+    regresarBtn.addEventListener("click", () => {
+      limpiarFormulario();
+    });
+  }
 });
 
 window.addEventListener("load", () => {
-    limpiarFormulario();
+  limpiarFormulario();
 });
