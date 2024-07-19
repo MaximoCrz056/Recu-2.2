@@ -22,7 +22,7 @@ let calcularRaices = (a, b, c) => {
     raices = [raiz1, raiz2];
   } else if (discriminante === 0) {
     let raiz = -b / (2 * a);
-    raices = [raiz];
+    raices = [raiz, raiz];
   } else {
     return { error: "negativa" };
   }
@@ -33,7 +33,7 @@ let calcularRaices = (a, b, c) => {
 let generarContenido = (a, b, c, resultadoCalculo) => {
   if (resultadoCalculo.error === "negativa") {
     return `<p class='text-danger mt-3'>La ecuación no tiene solución porque la raíz es negativa.</p>
-                        <button id='regresarBtn' class='btn btn-danger btn-sm mt-3'>Regresar</button>`;
+            <button id='regresarBtn' class='btn btn-danger btn-sm mt-3'>Regresar</button>`;
   } else {
     let raices = resultadoCalculo.raices;
     let tablaHTML = "<table class='table table-bordered mt-3'>";
@@ -63,28 +63,24 @@ evaluarBtn.addEventListener("click", () => {
   let c = parseFloat(document.querySelector("#c").value);
 
   if (isNaN(a) || isNaN(b) || isNaN(c)) {
-    resultado.innerHTML = `<p class='text-danger mt-3'>Por favor, ingresa valores numéricos válidos.</p>`;
+    resultado.innerHTML = `<p class='text-danger mt-3'>Por favor, ingresa valores numéricos válidos.</p>
+                            <button id='regresarBtn' class='btn btn-danger btn-sm mt-3'>Regresar</button>`;
+    let regresarBtn = document.querySelector("#regresarBtn");
+    regresarBtn.addEventListener("click", () => {
+      limpiarFormulario();
+    });
     return;
   }
 
   let resultadoCalculo = calcularRaices(a, b, c);
 
-  if (resultadoCalculo && resultadoCalculo.raices !== undefined) {
-    let contenidoHTML = generarContenido(a, b, c, resultadoCalculo);
-    resultado.innerHTML = contenidoHTML;
+  let contenidoHTML = generarContenido(a, b, c, resultadoCalculo);
+  resultado.innerHTML = contenidoHTML;
 
-    let regresarBtn = document.querySelector("#regresarBtn");
-    regresarBtn.addEventListener("click", () => {
-      limpiarFormulario();
-    });
-  } else {
-    resultado.innerHTML = `<p class='text-danger mt-3'>Por favor, ingresa valores que permitan calcular las raíces.</p>`;
-
-    let regresarBtn = document.querySelector("#regresarBtn");
-    regresarBtn.addEventListener("click", () => {
-      limpiarFormulario();
-    });
-  }
+  let regresarBtn = document.querySelector("#regresarBtn");
+  regresarBtn.addEventListener("click", () => {
+    limpiarFormulario();
+  });
 });
 
 window.addEventListener("load", () => {
